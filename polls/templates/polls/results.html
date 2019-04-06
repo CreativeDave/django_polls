@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <h1>{{ question.question_text }}</h1>
 
 <ul>
@@ -7,3 +8,35 @@
 </ul>
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+=======
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="panel panel-success col-lg-6 ">
+    
+    <div class="panel-heading "><h2>Poll Results</h2></div>
+
+    <div class="panel-body">
+        <h4>{{ question.question_text }}</h4>
+        <div class="list-group ">
+            {% for choice in question.choice_set.all %}
+            <div class="list-group-item">
+                <div class="container">
+                    <div class = "row">
+                        <div class = "col">{{ choice.choice_text }}</div>
+                        <div class= "col"><b>{{ choice.votes }} vote{{ choice.votes|pluralize }}</b></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <br/>
+            <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+        </div> 
+    </div> 
+</div>
+
+{% endblock %}
+
+>>>>>>> django polls basic UI added and test views added
