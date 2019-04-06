@@ -1,10 +1,5 @@
 from django.contrib import admin
 
-<<<<<<< HEAD
-from .models import Question
-
-admin.site.register(Question)
-=======
 from .models import Choice, Question
 
 
@@ -24,4 +19,3 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['question_text']
 
 admin.site.register(Question, QuestionAdmin)
->>>>>>> django polls basic UI added and test views added

@@ -20,11 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-<<<<<<< HEAD
-SECRET_KEY = '4c&cx$391e_^uqog28&8p+ox@t*^v7$9dqdjo+1neb$%6m-%h5'
-=======
-SECRET_KEY = '#4%%4xthmpm50yap38k2*31t2!z=zsr5vs*2js90c-3=z4+s&s'
->>>>>>> django polls basic UI added and test views added
+
+SECRET_KEY = '#44xthmpm50yap38k2*31t2!z=zsr5vs*2js90c-3=z4+s&s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -59,11 +56,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-<<<<<<< HEAD
-        'DIRS': [],
-=======
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
->>>>>>> django polls basic UI added and test views added
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,10 +69,6 @@ TEMPLATES = [
     },
 ]
 
-<<<<<<< HEAD
-=======
-
->>>>>>> django polls basic UI added and test views added
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
