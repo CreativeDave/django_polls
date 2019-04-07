@@ -124,8 +124,7 @@ When you see the ```>>>``` its time to **begin.**
  2. view all question objects. Observe how objects are derived.
  ```
  >>> Question.objects.all()
- ```
- ```
+
  <QuerySet [<Question: how are you>, <Question: whats your name?>]>
  ```
  3. insert data for Choice class objects, observe fk question_id
@@ -137,8 +136,7 @@ When you see the ```>>>``` its time to **begin.**
  4. view all choices. Which table and column? question_id? 
  ```
  >>> Choice.objects.all()
- ```
- ```
+
  <QuerySet [<Choice: Dave>, <Choice: nada>]>
  ```
  5. assign variable to question we just created using id attribute
@@ -148,7 +146,143 @@ When you see the ```>>>``` its time to **begin.**
  6. view choices. observe databse is filtering fk question_id = 2
  ```
  >>> q.choice_set.all()
- ```
- ```
+ 
  <QuerySet [<Choice: Dave>]>
  ```
+
+#### SET 2:
+
+1. create another question
+```
+>>> Question(question_text="whats the time?", pub_date=timezone.now()).save()
+```
+2. create a choice, note fk question_id
+```
+>>> Choice(choice_text="noon", votes=0, question_id=3).save()
+```
+3. create another choice
+```
+>>> Choice(choice_text="midnight", votes=0, question_id=3).save()
+```
+4. view all questions. how is id being handled for each in db?
+```
+>>> Question.objects.all()
+
+<QuerySet [<Question: how are you>, <Question: whats your name?>, <Question: whats the time?>]>
+```
+5. assign variable to question, using primary key this time
+```
+>>> q=Question.objects.get(pk=3)
+```
+6. view all related choices. observe how choice_set filters question_id = 3
+```
+>>> q.choice_set.all()
+
+<QuerySet [<Choice: noon>, <Choice: midnight>]>
+```
+7. change question text and save
+```
+>>> q.question_text="what time is it?"
+
+>>> q.save()
+```
+
+#### SET 3
+
+1. create another question
+```
+>>> Question(question_text="favorite color?", pub_date=timezone.now()).save()
+```
+2. create a choice
+```
+>>> Choice(choice_text="blue", votes=0, question_id=4).save()
+```
+3. create another choice
+```
+>>> Choice(choice_text="green", votes=0, question_id=4).save()
+```
+4. view Question class object data with id 4
+```
+>>> Question.objects.filter(id=4)
+
+<QuerySet [<Question: favorite color?>]>
+```
+5. view choices for this question. How is this being filtered?
+```
+>>> Question.objects.get(id=4).choice_set.all()
+
+<QuerySet [<Choice: blue>, <Choice: green>]>
+```
+6. select choice blue, and assign it a variable
+```
+c=Question.objects.get(pk=4).choice_set.get(choice_text="blue")
+```
+7. change the value to red and save
+```
+>>> c.choice_text="red"
+
+>>> c.save()
+```
+8. view choices again for this question
+```
+>>> Question.objects.get(id=4).choice_set.all()
+
+<QuerySet [<Choice: red>, <Choice: green>]>
+```
+9. count the choices. observe db is only filtering on fk
+```
+>>> Question.objects.get(id=4).choice_set.count()
+
+2
+```
+10. filter choice_set using built-in functions 
+```
+>>> Question.objects.get(id=4).choice_set.filter(choice_text__startswith='green')
+    
+<QuerySet [<Choice: green>]>
+```
+11. assign all data from question class objects to variable
+```
+q=Question.objects.all()
+```
+12. delete all Question objects
+```
+>>> q.delete()
+
+(10, {'polls.Choice': 6, 'polls.Question': 4})
+```
+
+##### Cool down
+
+we can check the polls_question table to make sure the data was deleted:
+```
+>>> Question.objects.all()
+
+<QuerySet []>
+```
+But what do you think about polls_choice? In the sqlite command line interface we had to delete the data from each table separately. 
+
+```
+>>> Choice.objects.all()
+
+<QuerySet []>
+```
+
+The Choice objects were deleted as well. This has to do with how we assigned the foreign key relationship in models.py. If you take a look, you'll see the parameter ```on_delete=models.CASCADE```
+
+```
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+ ```
+ 
+ if *CASCADE* is specified, when the referenced object is deleted, it also delete the objects that have references to it.
+ 
+ If we wanted to delete all Question objects, sparing the Choice objects, we would have to instead specify:
+ 
+ ```question = models.ForeignKey(Question, on_delete=models.DO_NOTHING, NULL=True)```
+ 
+But this would create a situation with a possible reference to an object that doesn't exist, best to leave it as CASCADE for this simple application.
+ 
+
