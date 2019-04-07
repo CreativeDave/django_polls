@@ -1,5 +1,5 @@
 # Python Shell CRUD Workout
-> To be a proficient django developer, I should both be familiar with how data is created, read, updated, and deleted, and the syntax needed to perform these operations in the API. This workout is an extension of the official django tutorial's playing with the API section, but with added structure and less explanation. I was practicing this routine on my own, and only decided to compile it in case anybody else finished the tutorial and wanted some additional review.  
+> To be a proficient django developer, I should both be familiar with how data is created, read, updated, and deleted, and the syntax needed to perform these operations in the API. This workout is an extension of the official django tutorial's playing with the API section, but with added structure and additional attention to the database operation. I was practicing this routine on my own, and only decided to compile it in case anybody else finished the tutorial and wanted some additional review.  
 
 ### Getting started
 
@@ -95,7 +95,7 @@ Even though the data is deleted, the auto-increment continues.
 Perform the next 3 commands to fix the current error, and delete the auto-increment from polls_choice:
 
 
-```UPDATE polls_question SET id = 1;
+```UPDATE polls_question SET id = 1;```
 
 
 ```UPDATE sqlite_sequence SET seq = 1 where name = 'polls_question';```
@@ -103,23 +103,52 @@ Perform the next 3 commands to fix the current error, and delete the auto-increm
 
 ```DELETE FROM sqlite_sequence WHERE name = 'polls_choice';```
 
+Now the auto incrementing primary key will begin at 1 for both tables. We have 1 question, and 0 choices. 
 
+Open the python shell and let's begin the workout in the API. ```CTRL + D```  exits the sqlite console.
 
+```python manage.py shell```
 
+When you see the ```>>>``` its time to **begin.**
+```
+>>> from polls.models import *
+>>> from django.utils import timezone
+```
 
+#### SET 1:
 
-
-
-
-
-
-
+ 1. insert data into *question_text* and *pub_date* to create Question object.
+ ```
+ >>> Question(question_text="whats your name?", pub_date=timezone.now()).save()
+ ```
+ 2. view all question objects. Observe how objects are derived.
+ ```
+ >>> Question.objects.all()
+ ```
+ ```
+ <QuerySet [<Question: how are you>, <Question: whats your name?>]>
+ ```
+ 3. insert data for Choice class objects, observe fk question_id
+ ```
+ >>> Choice(choice_text="nada", votes=0, question_id=1).save()
  
-
-
-
-
-
-
-
-
+ >>> Choice(choice_text="Dave", votes=0, question_id=2).save()
+ ```
+ 4. view all choices. Which table and column? question_id? 
+ ```
+ >>> Choice.objects.all()
+ ```
+ ```
+ <QuerySet [<Choice: Dave>, <Choice: nada>]>
+ ```
+ 5. assign variable to question we just created using id attribute
+ ```
+ >>> q=Question.objects.get(id=2)
+ ```
+ 6. view choices. observe databse is filtering fk question_id = 2
+ ```
+ >>> q.choice_set.all()
+ ```
+ ```
+ <QuerySet [<Choice: Dave>]>
+ ```
